@@ -35,4 +35,6 @@
  */
 dependencies {
     runtimeOnlyNonPublishable("com.github.GTNewHorizons:NotEnoughItems:2.5.4-GTNH:dev")
+    implementation files('build/libs/universalelectricity-5.2.2.jar')
+    implementation files('build/libs/basiccomponents-2.0.1.jar')
 }

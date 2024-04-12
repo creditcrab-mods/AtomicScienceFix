@@ -1,0 +1,56 @@
+{
+    "antimatter": {
+        "category": "master",
+        "sounds": [
+            {
+                "name": "antimatter",
+                "stream": false
+            }
+        ]
+    },
+    "strangematter": {
+        "category": "master",
+        "sounds": [
+            {
+                "name": "strangematter",
+                "stream": false
+            }
+        ]
+    },
+    "alarm": {
+        "category": "master",
+        "sounds": [
+            {
+                "name": "alarm",
+                "stream": false
+            }
+        ]
+    },
+    "accelerator": {
+        "category": "master",
+        "sounds": [
+            {
+                "name": "accelerator",
+                "stream": false
+            }
+        ]
+    },
+    "turbine": {
+        "category": "master",
+        "sounds": [
+            {
+                "name": "turbine",
+                "stream": false
+            }
+        ]
+    },
+    "assembler": {
+        "category": "master",
+        "sounds": [
+            {
+                "name": "assembler",
+                "stream": false
+            }
+        ]
+    }
+}

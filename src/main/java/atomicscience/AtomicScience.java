@@ -128,14 +128,12 @@ public class AtomicScience {
     public static CommonProxy proxy;
     @Metadata("AtomicScience")
     public static ModMetadata metadata;
-    private static final String[] LANGUAGES = new String[] { "en_US" };
+    private static final String[] LANGUAGES = new String[] { "en_US","zh_CN" };
     public static float WOLUN_MULTIPLIER_OUTPUT = 15.0F;
     public static boolean ALLOW_LAYERED_TURBINES = true;
     public static boolean ALLOW_TOXIC_WASTE = true;
     public static boolean ALLOW_RADIOACTIVE_ORES = true;
     public static boolean REQUIRE_TRITIUM = false;
-    public static final int BLOCK_ID_PREFIX = 3768;
-    public static final int ENTITY_ID_PREFIX = 49;
     public static Block blockRadioactive;
     public static Block bCentrifuge;
     public static Block bTurbine;
@@ -156,7 +154,6 @@ public class AtomicScience {
     public static Block bAtomicAssembler;
     public static Block bFissionReactor;
     public static Block bReactorTap;
-    public static final int ITEM_ID_PREFIX = 13768;
     public static Item itCell;
     public static Item itCellUranium;
     public static Item itCellBreederFuel;

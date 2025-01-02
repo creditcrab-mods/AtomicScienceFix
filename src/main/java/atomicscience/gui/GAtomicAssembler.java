@@ -1,4 +1,4 @@
-package atomicscience.shimian;
+package atomicscience.gui;
 
 import atomicscience.TAtomicAssembler;
 import atomicscience.jiqi.CAssembler;

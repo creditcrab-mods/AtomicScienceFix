@@ -1,4 +1,4 @@
-package atomicscience.shimian;
+package atomicscience.gui;
 
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.RenderHelper;

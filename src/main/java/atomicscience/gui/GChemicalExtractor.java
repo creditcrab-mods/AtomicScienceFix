@@ -1,31 +1,29 @@
-package atomicscience.shimian;
+package atomicscience.gui;
 
-import atomicscience.RFDisplay;
-import atomicscience.fenlie.TNuclearBoiler;
-import atomicscience.hecheng.CNuclearBoiler;
+import atomicscience.hecheng.CChemicalExtractor;
+import atomicscience.jiqi.TChemicalExtractor;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.StatCollector;
 import universalelectricity.api.energy.UnitDisplay;
 
-public class GNuclearBoiler extends GBase {
-    private TNuclearBoiler tileEntity;
+public class GChemicalExtractor extends GBase {
+    private TChemicalExtractor tileEntity;
 
-    public GNuclearBoiler(
-        InventoryPlayer par1InventoryPlayer, TNuclearBoiler tileEntity
+    public GChemicalExtractor(
+        InventoryPlayer par1InventoryPlayer, TChemicalExtractor tileEntity
     ) {
-        super(new CNuclearBoiler(par1InventoryPlayer, tileEntity));
+        super(new CChemicalExtractor(par1InventoryPlayer, tileEntity));
         this.tileEntity = tileEntity;
     }
 
     @Override
     public void drawGuiContainerForegroundLayer(int x, int y) {
         this.fontRendererObj.drawString(
-            this.tileEntity.getInventoryName(), 52, 6, 4210752
+            this.tileEntity.getInventoryName(), 45, 6, 4210752
         );
-        this.tileEntity.getClass();
         this.fontRendererObj.drawString(
-            RFDisplay.displayRF(tileEntity.DIAN)+"/t",
-            55,
+            this.tileEntity.DIAN * 20 + "RF/t",
+            90,
             48,
             4210752
         );
@@ -33,7 +31,7 @@ public class GNuclearBoiler extends GBase {
             UnitDisplay.getDisplay(
                 0, UnitDisplay.Unit.VOLTAGE
             ),
-            55,
+            90,
             60,
             4210752
         );
@@ -49,14 +47,7 @@ public class GNuclearBoiler extends GBase {
                 x - this.guiLeft,
                 y - this.guiTop + 10,
                 new String[] { this.tileEntity.waterTank.getFluid().getLocalizedName(),
-                               this.tileEntity.waterTank.getFluidAmount() + " mB" }
-            );
-        } else if (this.func_146978_c(155, 18, 14, 49, x, y) && this.tileEntity.gasTank.getFluid() != null) {
-            this.drawTooltip(
-                x - this.guiLeft,
-                y - this.guiTop + 10,
-                new String[] { this.tileEntity.gasTank.getFluid().getLocalizedName(),
-                    this.tileEntity.gasTank.getFluidAmount() + " mB" }
+                               this.tileEntity.waterTank.getFluidAmount() + " ml" }
             );
         }
     }
@@ -64,11 +55,12 @@ public class GNuclearBoiler extends GBase {
     @Override
     protected void drawGuiContainerBackgroundLayer(float par1, int x, int y) {
         super.drawGuiContainerBackgroundLayer(par1, x, y);
-        this.drawSlot(55, 25, GBase.SlotType.DIAN);
-        this.drawSlot(80, 25);
+        this.drawSlot(64, 24);
+        this.drawSlot(64, 48, GBase.SlotType.DIAN);
+        this.drawSlot(117, 24);
         float var10003 = (float) this.tileEntity.smeltingTicks;
         this.tileEntity.getClass();
-        this.drawBar(110, 26, var10003 / 300.0F);
+        this.drawBar(87, 24, var10003 / 280.0F);
         this.drawMeter(
             8,
             18,
@@ -79,15 +71,5 @@ public class GNuclearBoiler extends GBase {
             0.99F
         );
         this.drawSlot(24, 49, GBase.SlotType.SHUI);
-        this.drawMeter(
-            155,
-            18,
-            (float) this.tileEntity.gasTank.getFluidAmount()
-                / (float) this.tileEntity.gasTank.getCapacity(),
-            0.84F,
-            0.9F,
-            0.69F
-        );
-        this.drawSlot(135, 49, GBase.SlotType.QI);
     }
 }

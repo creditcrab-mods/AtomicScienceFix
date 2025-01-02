@@ -1,4 +1,4 @@
-package atomicscience.shimian;
+package atomicscience.gui;
 
 import atomicscience.AtomicScience;
 import atomicscience.PAutoBuilder;

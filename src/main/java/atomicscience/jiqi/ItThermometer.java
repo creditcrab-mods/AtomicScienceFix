@@ -14,11 +14,12 @@ import universalelectricity.core.electricity.ElectricityPack;
 import universalelectricity.core.vector.Vector3;
 
 public class ItThermometer extends ItElectricAS {
-    public static final int JOULES_CONSUMPTION = 1000;
-
     public ItThermometer(int texture) {
         super("thermometer");
         this.setTextureName("atomicscience:thermometer");
+        this.CAPACITY = 20000;
+        this.SEND = 400;
+        this.RECEIVE = 400;
     }
 
     @Override
@@ -75,7 +76,7 @@ public class ItThermometer extends ItElectricAS {
         float par10
     ) {
         if (!par3World.isRemote) {
-            if (this.getJoules(itemStack) > 0.0D) {
+            if (this.getEnergyStored(itemStack) > 400) {
                 TileEntity tileEntity = par3World.getTileEntity(x, y, z);
                 if (tileEntity instanceof ITemperature) {
                     if (par2EntityPlayer.isSneaking()) {
@@ -91,10 +92,7 @@ public class ItThermometer extends ItElectricAS {
                         ));
                     }
 
-                    this.onProvide(
-                        ElectricityPack.getFromWatts(1000.0D, this.getVoltage(itemStack)),
-                        itemStack
-                    );
+                    this.extractEnergy(itemStack,400,false);
                 }
             } else {
                 par2EntityPlayer.addChatComponentMessage(
@@ -106,13 +104,5 @@ public class ItThermometer extends ItElectricAS {
         return false;
     }
 
-    @Override
-    public double getMaxJoules(ItemStack itemStack) {
-        return 50000.0D;
-    }
 
-    @Override
-    public double getVoltage(ItemStack itemStack) {
-        return 20.0D;
-    }
 }

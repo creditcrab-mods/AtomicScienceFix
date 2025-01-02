@@ -1,4 +1,4 @@
-package atomicscience.shimian;
+package atomicscience.gui;
 
 import atomicscience.fenlie.TFissionReactor;
 import calclavia.lib.gui.GuiContainerBase;

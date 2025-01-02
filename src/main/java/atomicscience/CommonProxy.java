@@ -10,7 +10,7 @@ import atomicscience.hecheng.CChemicalExtractor;
 import atomicscience.hecheng.CNuclearBoiler;
 import atomicscience.jiqi.CAssembler;
 import atomicscience.jiqi.TChemicalExtractor;
-import atomicscience.shimian.CFissionReactor;
+import atomicscience.gui.CFissionReactor;
 import cpw.mods.fml.common.network.IGuiHandler;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;

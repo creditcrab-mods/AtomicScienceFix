@@ -36,7 +36,7 @@ public class GCentrifuge extends GBase {
         );
         this.fontRendererObj.drawString(
             UnitDisplay.getDisplay(
-                this.tileEntity.getVoltage(), UnitDisplay.Unit.VOLTAGE
+                0, UnitDisplay.Unit.VOLTAGE
             ),
             70,
             70,

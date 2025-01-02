@@ -21,16 +21,15 @@ public class GChemicalExtractor extends GBase {
         this.fontRendererObj.drawString(
             this.tileEntity.getInventoryName(), 45, 6, 4210752
         );
-        this.tileEntity.getClass();
         this.fontRendererObj.drawString(
-            UnitDisplay.getDisplay((double) (500.0F * 20.0F), UnitDisplay.Unit.WATT),
+            this.tileEntity.DIAN * 20 + "RF/t",
             90,
             48,
             4210752
         );
         this.fontRendererObj.drawString(
             UnitDisplay.getDisplay(
-                this.tileEntity.getVoltage(), UnitDisplay.Unit.VOLTAGE
+                0, UnitDisplay.Unit.VOLTAGE
             ),
             90,
             60,

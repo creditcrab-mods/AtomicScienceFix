@@ -12,12 +12,16 @@ import universalelectricity.core.electricity.ElectricityPack;
 
 public class TAtomicAssembler extends TInventory {
     public final int SMELTING_TICKS = 1200;
-    public final float DIAN = 10000.0F;
+    public final int DIAN = 4000;
     public int smeltingTicks = 0;
     public float rotationYaw1;
     public float rotationYaw2;
     public float rotationYaw3;
     public EntityItem entityItem;
+
+    public TAtomicAssembler() {
+        super(32000, Integer.MAX_VALUE, Integer.MAX_VALUE);
+    }
 
     @Override
     public void updateEntity() {
@@ -25,9 +29,9 @@ public class TAtomicAssembler extends TInventory {
         if (!this.isDisabled()) {
             if (!this.worldObj.isRemote) {
                 if (this.canWork()) {
-                    double var10000 = super.wattsReceived;
+                    double energy = energyStorage.getEnergyStored();
                     this.getClass();
-                    if (var10000 >= 10000.0D) {
+                    if (energy >= DIAN) {
                         if (this.smeltingTicks == 0) {
                             this.getClass();
                             this.smeltingTicks = 1200;
@@ -43,7 +47,7 @@ public class TAtomicAssembler extends TInventory {
                             this.smeltingTicks = 0;
                         }
 
-                        super.wattsReceived = 0.0D;
+                        energyStorage.setEnergyStored(0);
                     }
                 } else {
                     this.smeltingTicks = 0;
@@ -91,12 +95,6 @@ public class TAtomicAssembler extends TInventory {
         }
     }
 
-    @Override
-    public ElectricityPack getRequest() {
-        return this.canWork()
-            ? new ElectricityPack(10000.0D / this.getVoltage(), this.getVoltage())
-            : new ElectricityPack();
-    }
 
     @Override
     public void onDataPacket(NetworkManager arg0, S35PacketUpdateTileEntity arg1) {
@@ -104,6 +102,7 @@ public class TAtomicAssembler extends TInventory {
 
         this.smeltingTicks = nbt.getInteger("smeltingTicks");
         super.disabledTicks = nbt.getInteger("disabledTicks");
+        energyStorage.writeToNBT(nbt);
     }
 
     @Override
@@ -112,6 +111,7 @@ public class TAtomicAssembler extends TInventory {
 
         nbt.setInteger("smeltingTicks", this.smeltingTicks);
         nbt.setInteger("disabledTicks", super.disabledTicks);
+        energyStorage.readFromNBT(nbt);
 
         return new S35PacketUpdateTileEntity(
             this.xCoord, this.yCoord, this.zCoord, this.getBlockMetadata(), nbt
@@ -173,11 +173,6 @@ public class TAtomicAssembler extends TInventory {
     public void writeToNBT(NBTTagCompound nbt) {
         super.writeToNBT(nbt);
         nbt.setInteger("smeltingTicks", this.smeltingTicks);
-    }
-
-    @Override
-    public double getVoltage() {
-        return UniversalElectricity.isVoltageSensitive ? 480.0D : 120.0D;
     }
 
     @Override

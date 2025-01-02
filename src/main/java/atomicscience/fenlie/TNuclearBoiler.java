@@ -8,6 +8,8 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
+import net.minecraft.world.IBlockAccess;
+import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidContainerRegistry;
@@ -16,32 +18,24 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
+import universalelectricity.api.energy.IEnergyContainer;
 import universalelectricity.core.electricity.ElectricityPack;
 import universalelectricity.core.item.ElectricItemHelper;
 import universalelectricity.prefab.implement.IRotatable;
 
 public class TNuclearBoiler
     extends TInventory implements ISidedInventory, IFluidHandler, IRotatable {
-    public final int SHI_JIAN = 300;
-    public final float DIAN = 800.0F;
+    public static final int SHI_JIAN = 300;
+    public static final int DIAN = 320;
     public int smeltingTicks = 0;
     public float rotation = 0.0F;
     public final FluidTank waterTank;
     public final FluidTank gasTank;
 
     public TNuclearBoiler() {
+        super(DIAN,Integer.MAX_VALUE,Integer.MAX_VALUE);
         this.waterTank = new FluidTank(FluidRegistry.WATER, 0, 5000);
         this.gasTank = new FluidTank(AtomicScience.FLUID_URANIUM_HEXAFLOURIDE, 0, 5000);
-        // TODO: WTF
-        // this.waterTank.setTankPressure(-10);
-        // this.gasTank.setTankPressure(10);
-    }
-
-    @Override
-    public ElectricityPack getRequest() {
-        return this.canWork()
-            ? new ElectricityPack(800.0D / this.getVoltage(), this.getVoltage())
-            : new ElectricityPack();
     }
 
     @Override
@@ -79,12 +73,14 @@ public class TNuclearBoiler
             }
 
             if (this.canWork()) {
+                /*
                 super.wattsReceived += ElectricItemHelper.dechargeItem(
                     super.containingItems[0], 800.0D, this.getVoltage()
                 );
-                double var10000 = super.wattsReceived;
+                */
+                int energy = super.energyStorage.getEnergyStored();
                 this.getClass();
-                if (var10000 >= (double) (800.0F / 2.0F)) {
+                if (energy >=  (DIAN)) {
                     if (this.smeltingTicks == 0) {
                         this.smeltingTicks = 300;
                     }
@@ -99,7 +95,7 @@ public class TNuclearBoiler
                         this.smeltingTicks = 0;
                     }
 
-                    super.wattsReceived = 0.0D;
+                    super.energyStorage.setEnergyStored(0);
                 }
             } else {
                 this.smeltingTicks = 0;
@@ -123,6 +119,7 @@ public class TNuclearBoiler
             nbt.getInteger("uraniumHexaflourideAmount")
         ));
         super.disabledTicks = nbt.getInteger("disabledTicks");
+        energyStorage.readFromNBT(nbt);
     }
 
     @Override
@@ -132,6 +129,7 @@ public class TNuclearBoiler
         nbt.setInteger("waterAmount", this.waterTank.getFluidAmount());
         nbt.setInteger("uraniumHexaflourideAmount", this.gasTank.getFluidAmount());
         nbt.setInteger("disabledTicks", super.disabledTicks);
+        energyStorage.writeToNBT(nbt);
 
         return new S35PacketUpdateTileEntity(
             this.xCoord, this.yCoord, this.zCoord, this.getBlockMetadata(), nbt
@@ -268,4 +266,5 @@ public class TNuclearBoiler
     public boolean canExtractItem(int slotID, ItemStack itemstack, int j) {
         return slotID == 2;
     }
+
 }

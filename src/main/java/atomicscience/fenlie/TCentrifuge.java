@@ -9,6 +9,8 @@ import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.IBlockAccess;
+import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
@@ -26,20 +28,14 @@ import universalelectricity.prefab.implement.IRotatable;
 public class TCentrifuge
     extends TInventory implements ISidedInventory, IFluidHandler, IRotatable {
     public static final int SHI_JIAN = 2400;
-    public static final float DIAN = 500.0F;
+    public static final int DIAN = 200;
     public int smeltingTicks = 0;
     public float xuanZhuan = 0.0F;
     public final FluidTank gasTank;
 
     public TCentrifuge() {
+        super(DIAN,Integer.MAX_VALUE,Integer.MAX_VALUE);
         this.gasTank = new FluidTank(AtomicScience.FLUID_URANIUM_HEXAFLOURIDE, 0, 5000);
-    }
-
-    @Override
-    public ElectricityPack getRequest() {
-        return this.canWork()
-            ? new ElectricityPack(500.0D / this.getVoltage(), this.getVoltage())
-            : new ElectricityPack();
     }
 
     @Override
@@ -72,10 +68,14 @@ public class TCentrifuge
             }
 
             if (this.canWork()) {
+                //TODO: Drain RF Item
+                /*
                 super.wattsReceived += ElectricItemHelper.dechargeItem(
                     super.containingItems[0], 500.0D, this.getVoltage()
                 );
-                if (super.wattsReceived >= 500.0D) {
+                */
+
+                if (energyStorage.getEnergyStored() >= DIAN) {
                     if (this.smeltingTicks == 0) {
                         this.smeltingTicks = 2400;
                     }
@@ -90,7 +90,7 @@ public class TCentrifuge
                         this.smeltingTicks = 0;
                     }
 
-                    super.wattsReceived = 0.0D;
+                    energyStorage.setEnergyStored(0);
                 }
             } else {
                 this.smeltingTicks = 0;
@@ -110,6 +110,7 @@ public class TCentrifuge
             AtomicScience.FLUID_URANIUM_HEXAFLOURIDE, nbt.getInteger("fluidAmount")
         ));
         super.disabledTicks = nbt.getInteger("disabledTicks");
+        energyStorage.writeToNBT(nbt);
     }
 
     public Packet getDescriptionPacket() {
@@ -118,6 +119,7 @@ public class TCentrifuge
         nbt.setInteger("shiJian", this.smeltingTicks);
         nbt.setInteger("fluidAmount", this.gasTank.getFluidAmount());
         nbt.setInteger("disabledTicks", super.disabledTicks);
+        energyStorage.readFromNBT(nbt);
 
         return new S35PacketUpdateTileEntity(
             this.xCoord, this.yCoord, this.zCoord, this.getBlockMetadata(), nbt
@@ -236,4 +238,5 @@ public class TCentrifuge
                 return false;
         }
     }
+
 }

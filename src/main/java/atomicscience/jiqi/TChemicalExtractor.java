@@ -7,6 +7,8 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
+import net.minecraft.world.IBlockAccess;
+import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidContainerRegistry;
@@ -22,25 +24,18 @@ import universalelectricity.prefab.implement.IRotatable;
 public class TChemicalExtractor
     extends TInventory implements ISidedInventory, IFluidHandler, IRotatable {
     public final int SMELTING_TICKS = 280;
-    // public final float DIAN = 500.0F;
+    public static final int DIAN = 200;
     public int smeltingTicks = 0;
     public float rotation = 0.0F;
     public final FluidTank waterTank;
     private int playersUsing;
 
     public TChemicalExtractor() {
+        super(DIAN,Integer.MAX_VALUE,Integer.MAX_VALUE);
         this.waterTank = new FluidTank(FluidRegistry.WATER, 0, 5000);
         this.playersUsing = 0;
-        // TODO: WTF
-        // this.waterTank.setTankPressure(-10);
     }
 
-    @Override
-    public ElectricityPack getRequest() {
-        return this.canWork()
-            ? new ElectricityPack(500.0D / this.getVoltage(), this.getVoltage())
-            : new ElectricityPack();
-    }
 
     @Override
     public void updateEntity() {
@@ -69,12 +64,15 @@ public class TChemicalExtractor
             }
 
             if (this.canWork()) {
+                /*TODO:Drain rf item
                 super.wattsReceived += ElectricItemHelper.dechargeItem(
                     super.containingItems[0], 500.0D, this.getVoltage()
                 );
-                double var10000 = super.wattsReceived;
-                this.getClass();
-                if (var10000 >= (double) (500.0F / 2.0F)) {
+
+                 */
+                int energy = energyStorage.getEnergyStored();
+                //this.getClass();
+                if (energy >= (DIAN / 2)) {
                     if (this.smeltingTicks == 0) {
                         this.smeltingTicks = 280;
                     }
@@ -89,7 +87,7 @@ public class TChemicalExtractor
                         this.smeltingTicks = 0;
                     }
 
-                    super.wattsReceived = 0.0D;
+                    energyStorage.setEnergyStored(0);
                 }
             } else {
                 this.smeltingTicks = 0;
@@ -110,6 +108,7 @@ public class TChemicalExtractor
             new FluidStack(FluidRegistry.WATER, nbt.getInteger("waterAmount"))
         );
         super.disabledTicks = nbt.getInteger("disabledTicks");
+        energyStorage.readFromNBT(nbt);
     }
 
     @Override
@@ -118,6 +117,7 @@ public class TChemicalExtractor
         nbt.setInteger("smeltingTicks", this.smeltingTicks);
         nbt.setInteger("waterAmount", this.waterTank.getFluidAmount());
         nbt.setInteger("disabledTicks", super.disabledTicks);
+        energyStorage.writeToNBT(nbt);
 
         return new S35PacketUpdateTileEntity(
             this.xCoord, this.yCoord, this.zCoord, this.getBlockMetadata(), nbt
@@ -262,4 +262,5 @@ public class TChemicalExtractor
     public FluidStack drain(ForgeDirection arg0, FluidStack arg1, boolean arg2) {
         return null;
     }
+
 }

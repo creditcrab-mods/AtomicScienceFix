@@ -110,7 +110,7 @@ import universalelectricity.prefab.ore.OreGenerator;
 @Mod(
     modid = "AtomicScience",
     name = "Atomic Science",
-    version = "1.1.0",
+    version = Tags.VERSION,
     dependencies = "required-after:basiccomponents"
 )
 public class AtomicScience {
@@ -193,7 +193,7 @@ public class AtomicScience {
     @EventHandler
     public void preInit(FMLPreInitializationEvent event) {
         instance = this;
-        MinecraftForge.EVENT_BUS.register(this);
+        MinecraftForge.EVENT_BUS.register(proxy);
         AtomicScience.CONFIGURATION.load();
         WOLUN_MULTIPLIER_OUTPUT = (float) AtomicScience.CONFIGURATION
                                       .get(

@@ -9,6 +9,8 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
+import net.minecraft.world.IBlockAccess;
+import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import universalelectricity.core.UniversalElectricity;
 import universalelectricity.core.electricity.ElectricityPack;
@@ -16,35 +18,15 @@ import universalelectricity.core.vector.Vector3;
 import universalelectricity.prefab.implement.IRotatable;
 
 public class TAccelerator extends TInventory implements IRotatable, ISidedInventory {
-    public final int DIAN = 10000;
+    public static final int DIAN = 4000;
     public double yongDianLiang = 0.0D;
     public int antimatter;
     public EMatter wuSu;
     public static final float SU_DU = 1.0F;
     public float suDu;
 
-    @Override
-    public boolean canConnect(ForgeDirection direction) {
-        return true;
-    }
-
-    @Override
-    public ElectricityPack getRequest() {
-        return this.getStackInSlot(0) != null
-                && (this.worldObj.isBlockIndirectlyGettingPowered(
-                        this.xCoord, this.yCoord, this.zCoord
-                    )
-                    || this.worldObj.getBlockPowerInput(
-                           this.xCoord, this.yCoord, this.zCoord
-                       ) > 0)
-            ? new ElectricityPack(10000.0D / this.getVoltage(), this.getVoltage())
-            : new ElectricityPack();
-    }
-
-    @Override
-    public void onReceive(ElectricityPack electricityPack) {
-        super.onReceive(electricityPack);
-        this.yongDianLiang += electricityPack.getWatts();
+    public TAccelerator() {
+        super(DIAN, Integer.MAX_VALUE, Integer.MAX_VALUE);
     }
 
     @Override
@@ -82,9 +64,9 @@ public class TAccelerator extends TInventory implements IRotatable, ISidedInvent
                 if (this.worldObj.isBlockIndirectlyGettingPowered(
                         this.xCoord, this.yCoord, this.zCoord
                     )) {
-                    double var10000 = super.wattsReceived;
-                    this.getClass();
-                    if (var10000 >= 10000.0D) {
+                    int energy = energyStorage.getEnergyStored();
+                    //this.getClass();
+                    if (energy >= DIAN) {
                         if (this.wuSu == null) {
                             if (this.getStackInSlot(0) != null
                                 && super.ticks % 20L == 0L) {
@@ -142,9 +124,8 @@ public class TAccelerator extends TInventory implements IRotatable, ISidedInvent
                             this.wuSu = null;
                         }
 
-                        double var10001 = super.wattsReceived;
-                        this.getClass();
-                        super.wattsReceived = Math.max(var10001 - 10000.0D / 10.0D, 0.0D);
+
+                        super.energyStorage.setEnergyStored(Integer.max(energy - DIAN / 10, 0));
                     } else {
                         if (this.wuSu != null) {
                             this.wuSu.setDead();
@@ -177,6 +158,7 @@ public class TAccelerator extends TInventory implements IRotatable, ISidedInvent
         this.suDu = nbt.getFloat("suDu");
         this.yongDianLiang = nbt.getDouble("yongDianLiang");
         this.antimatter = nbt.getInteger("antimatter");
+        energyStorage.readFromNBT(nbt);
     }
 
     // public void handlePacketData(INetworkManager network, int packetType,
@@ -200,6 +182,7 @@ public class TAccelerator extends TInventory implements IRotatable, ISidedInvent
         nbt.setFloat("suDu", this.suDu);
         nbt.setDouble("yongDianLiang", this.yongDianLiang);
         nbt.setInteger("antimatter", this.antimatter);
+        energyStorage.writeToNBT(nbt);
 
         return new S35PacketUpdateTileEntity(
             this.xCoord, this.yCoord, this.zCoord, this.getBlockMetadata(), nbt
@@ -216,7 +199,6 @@ public class TAccelerator extends TInventory implements IRotatable, ISidedInvent
     @Override
     public void readFromNBT(NBTTagCompound nbt) {
         super.readFromNBT(nbt);
-        super.wattsReceived = nbt.getDouble("wattsReceived");
         this.yongDianLiang = nbt.getDouble("yongDianLiang");
         this.antimatter = nbt.getInteger("antimatter");
     }
@@ -224,7 +206,6 @@ public class TAccelerator extends TInventory implements IRotatable, ISidedInvent
     @Override
     public void writeToNBT(NBTTagCompound nbt) {
         super.writeToNBT(nbt);
-        nbt.setDouble("wattsReceived", super.wattsReceived);
         nbt.setDouble("yongDianLiang", this.yongDianLiang);
         nbt.setInteger("antimatter", this.antimatter);
     }
@@ -234,10 +215,6 @@ public class TAccelerator extends TInventory implements IRotatable, ISidedInvent
         return 3;
     }
 
-    @Override
-    public double getVoltage() {
-        return UniversalElectricity.isVoltageSensitive ? 480.0D : 120.0D;
-    }
 
     @Override
     public int[] getAccessibleSlotsFromSide(int side) {
@@ -267,4 +244,5 @@ public class TAccelerator extends TInventory implements IRotatable, ISidedInvent
                 return false;
         }
     }
+
 }

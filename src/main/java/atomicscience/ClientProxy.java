@@ -28,9 +28,16 @@ import atomicscience.shimian.GFissionReactor;
 import atomicscience.shimian.GNuclearBoiler;
 import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.client.registry.RenderingRegistry;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
+import net.minecraftforge.client.event.TextureStitchEvent;
+import net.minecraftforge.fluids.Fluid;
 
 public class ClientProxy extends CommonProxy {
     public void preInit() {
@@ -110,5 +117,18 @@ public class ClientProxy extends CommonProxy {
         }
 
         return null;
+    }
+
+    @SideOnly(Side.CLIENT)
+    @SubscribeEvent
+    public void registerIcons(TextureStitchEvent.Pre event){
+        if(event.map.getTextureType() == 0){
+            registerTexture(event.map, AtomicScience.FLUID_URANIUM_HEXAFLOURIDE);
+        }
+    }
+    public void registerTexture(IIconRegister ir, Fluid fluid){
+        IIcon fluidIcon = ir.registerIcon("atomicscience:uraniumHexafluoride");
+        fluid.setIcons(fluidIcon);
+
     }
 }

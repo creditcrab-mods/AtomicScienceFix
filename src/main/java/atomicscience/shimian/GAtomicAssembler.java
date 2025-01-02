@@ -46,7 +46,7 @@ public class GAtomicAssembler extends GuiContainer {
 
         this.fontRendererObj.drawString(displayText, 100, this.ySize - 108 + 2, 4210752);
         this.fontRendererObj.drawString(
-            "Voltage: " + (int) this.tileEntity.getVoltage(),
+            "Voltage: " + (int) 0,
             100,
             this.ySize - 96 + 2,
             4210752

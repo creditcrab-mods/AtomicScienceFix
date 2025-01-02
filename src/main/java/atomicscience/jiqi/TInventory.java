@@ -9,21 +9,27 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.world.IBlockAccess;
+import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
+import universalelectricity.prefab.tile.TileEntityRFUser;
 
 public abstract class TInventory
-    extends TileEntityUniversalRunnable implements IInventory {
+    extends TileEntityRFUser implements IInventory {
     public final Set<EntityPlayer> players = new HashSet<>();
     protected ItemStack[] containingItems = new ItemStack[this.getSizeInventory()];
 
+    public TInventory(int capacity, int send, int recieve) {
+        super(capacity, send, recieve);
+    }
+
     @Override
     public boolean isUseableByPlayer(EntityPlayer par1EntityPlayer) {
-        return this.worldObj.getTileEntity(this.xCoord, this.yCoord, this.zCoord) != this
-            ? false
-            : par1EntityPlayer.getDistanceSq(
-                  (double) this.xCoord + 0.5D,
-                  (double) this.yCoord + 0.5D,
-                  (double) this.zCoord + 0.5D
-              ) <= 64.0D;
+        return this.worldObj.getTileEntity(this.xCoord, this.yCoord, this.zCoord) == this && par1EntityPlayer.getDistanceSq(
+                (double) this.xCoord + 0.5D,
+                (double) this.yCoord + 0.5D,
+                (double) this.zCoord + 0.5D
+        ) <= 64.0D;
     }
 
     @Override
@@ -140,5 +146,16 @@ public abstract class TInventory
         }
 
         nbt.setTag("Items", var2);
+    }
+
+    public ForgeDirection getDirection(IBlockAccess world, int x, int y, int z) {
+        return ForgeDirection.getOrientation(this.getBlockMetadata());
+    }
+
+    public void
+    setDirection(World world, int x, int y, int z, ForgeDirection facingDirection) {
+        this.worldObj.setBlockMetadataWithNotify(
+            this.xCoord, this.yCoord, this.zCoord, facingDirection.ordinal(), 2
+        );
     }
 }

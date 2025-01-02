@@ -25,13 +25,13 @@ public class GAccelerator extends GuiContainer {
         this.fontRendererObj.drawString(
             this.tileEntity.getInventoryName(), 40, 10, 4210752
         );
-        String status = "";
+        String status;
         Vector3 position = new Vector3(this.tileEntity);
         position.modifyPositionFromSide(this.tileEntity
                                             .getDirection(
                                                 this.tileEntity.getWorldObj(),
                                                 this.tileEntity.xCoord,
-                                                this.tileEntity.xCoord,
+                                                this.tileEntity.yCoord,
                                                 this.tileEntity.zCoord
                                             )
                                             .getOpposite());
@@ -57,7 +57,7 @@ public class GAccelerator extends GuiContainer {
         }
 
         this.fontRendererObj.drawString(
-            "Velocity: " + Math.round(this.tileEntity.suDu / 1.0F * 100.0F) + "%",
+            "Velocity: " + Math.round(this.tileEntity.suDu * 100.0F) + "%",
             8,
             27,
             4210752
@@ -73,15 +73,15 @@ public class GAccelerator extends GuiContainer {
             4210752
         );
         StringBuilder var10001 = new StringBuilder();
-        this.tileEntity.getClass();
+
         this.fontRendererObj.drawString(
             var10001
                 .append(UnitDisplay.getDisplayShort(
-                    (double) (10000 * 20), UnitDisplay.Unit.WATT
+                     10000 * 20, UnitDisplay.Unit.WATT
                 ))
                 .append(" ")
                 .append(UnitDisplay.getDisplayShort(
-                    this.tileEntity.getVoltage(), UnitDisplay.Unit.VOLTAGE
+                    0, UnitDisplay.Unit.VOLTAGE
                 ))
                 .toString(),
             8,

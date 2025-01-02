@@ -1,5 +1,6 @@
 package atomicscience.shimian;
 
+import atomicscience.RFDisplay;
 import atomicscience.fenlie.TNuclearBoiler;
 import atomicscience.hecheng.CNuclearBoiler;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -23,14 +24,14 @@ public class GNuclearBoiler extends GBase {
         );
         this.tileEntity.getClass();
         this.fontRendererObj.drawString(
-            UnitDisplay.getDisplay((double) (800.0F * 20.0F), UnitDisplay.Unit.WATT),
+            RFDisplay.displayRF(tileEntity.DIAN)+"/t",
             55,
             48,
             4210752
         );
         this.fontRendererObj.drawString(
             UnitDisplay.getDisplay(
-                this.tileEntity.getVoltage(), UnitDisplay.Unit.VOLTAGE
+                0, UnitDisplay.Unit.VOLTAGE
             ),
             55,
             60,
@@ -48,15 +49,14 @@ public class GNuclearBoiler extends GBase {
                 x - this.guiLeft,
                 y - this.guiTop + 10,
                 new String[] { this.tileEntity.waterTank.getFluid().getLocalizedName(),
-                               this.tileEntity.waterTank.getFluidAmount() + " ml" }
+                               this.tileEntity.waterTank.getFluidAmount() + " mB" }
             );
         } else if (this.func_146978_c(155, 18, 14, 49, x, y) && this.tileEntity.gasTank.getFluid() != null) {
             this.drawTooltip(
                 x - this.guiLeft,
                 y - this.guiTop + 10,
                 new String[] { this.tileEntity.gasTank.getFluid().getLocalizedName(),
-                               (float) this.tileEntity.gasTank.getFluidAmount() / 1000.0F
-                                   + " dm3" }
+                    this.tileEntity.gasTank.getFluidAmount() + " mB" }
             );
         }
     }

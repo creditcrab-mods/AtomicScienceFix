@@ -6,7 +6,9 @@ import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import universalelectricity.prefab.tile.TileEntityAdvanced;
 
 public class BTurbine extends BBase {
     public BTurbine() {
@@ -47,6 +49,11 @@ public class BTurbine extends BBase {
         super.breakBlock(world, x, y, z, par5, par6);
     }
 
+    @Override
+    public void onNeighborChange(IBlockAccess world, int x, int y, int z, int tileX, int tileY, int tileZ)
+    {
+        ((TileEntityAdvanced)world.getTileEntity(x,y,z)).onNeighborChange();
+    }
     @Override
     @SideOnly(Side.CLIENT)
     public int getRenderType() {

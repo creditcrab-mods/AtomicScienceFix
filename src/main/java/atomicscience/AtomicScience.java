@@ -129,7 +129,7 @@ public class AtomicScience {
     @Metadata("AtomicScience")
     public static ModMetadata metadata;
     private static final String[] LANGUAGES = new String[] { "en_US","zh_CN" };
-    public static float WOLUN_MULTIPLIER_OUTPUT = 15.0F;
+    public static int TURBINE_MULTIPLIER_OUTPUT = 6;
     public static boolean ALLOW_LAYERED_TURBINES = true;
     public static boolean ALLOW_TOXIC_WASTE = true;
     public static boolean ALLOW_RADIOACTIVE_ORES = true;
@@ -195,13 +195,13 @@ public class AtomicScience {
         instance = this;
         MinecraftForge.EVENT_BUS.register(proxy);
         AtomicScience.CONFIGURATION.load();
-        WOLUN_MULTIPLIER_OUTPUT = (float) AtomicScience.CONFIGURATION
+        TURBINE_MULTIPLIER_OUTPUT =  AtomicScience.CONFIGURATION
                                       .get(
                                           "general",
                                           "Turbine Output Multiplier",
-                                          (double) WOLUN_MULTIPLIER_OUTPUT
+                                           TURBINE_MULTIPLIER_OUTPUT
                                       )
-                                      .getDouble((double) WOLUN_MULTIPLIER_OUTPUT);
+                                      .getInt( TURBINE_MULTIPLIER_OUTPUT);
         ALLOW_LAYERED_TURBINES
             = AtomicScience.CONFIGURATION
                   .get("general", "Allow Layered Turbines", ALLOW_LAYERED_TURBINES)

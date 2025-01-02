@@ -7,6 +7,8 @@ import atomicscience.AtomicScience;
 import atomicscience.SoundManager;
 import atomicscience.api.ISteamReceptor;
 import calclavia.lib.TileEntityUniversalProducer;
+import cofh.api.energy.IEnergyConnection;
+import cofh.api.energy.IEnergyReceiver;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.nbt.NBTTagCompound;
@@ -22,9 +24,11 @@ import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
 import universalelectricity.core.vector.Vector3;
+import universalelectricity.core.vector.VectorHelper;
+import universalelectricity.prefab.tile.TileEntityDisableable;
 
 public class TTurbine
-    extends TileEntityUniversalProducer implements ISteamReceptor, IFluidHandler {
+    extends TileEntityDisableable implements ISteamReceptor, IFluidHandler, IEnergyConnection {
     public float rotation = 0.0F;
     public float speed = 0.0F;
     public boolean isMultiblock = false;
@@ -32,6 +36,11 @@ public class TTurbine
     public static final int BAN_JING = 1;
     // private static final double MAX_XUAN_ZHUAN = 50.0D;
     // private static final float ZHUAN_MAN = 0.5F;
+
+    boolean cached = false;
+
+    public IEnergyReceiver receiver;
+
     public final FluidTank tank;
 
     public TTurbine() {
@@ -39,13 +48,37 @@ public class TTurbine
     }
 
     @Override
-    public boolean canConnect(ForgeDirection direction) {
-        return this.masterTurbine != null ? false : direction == ForgeDirection.UP;
+    public boolean canConnectEnergy(ForgeDirection forgeDirection) {
+        return this.masterTurbine != null ? false : forgeDirection == ForgeDirection.UP;
     }
+
+    public void updateAdjacentReceiver(){
+        if (!worldObj.isRemote) {
+            TileEntity te = VectorHelper.getTileEntityFromSide(this.worldObj, new Vector3(this.xCoord,this.yCoord,this.zCoord), ForgeDirection.UP);
+            if (te instanceof IEnergyReceiver) this.receiver = (IEnergyReceiver) te;
+            else receiver = null;
+
+        }
+    }
+
+    @Override public void onNeighborChange(){
+        updateAdjacentReceiver();
+    }
+
+    public void pushEnergy(int energy){
+        if(receiver != null){
+            receiver.receiveEnergy(ForgeDirection.DOWN,energy,false);
+        }
+    }
+
 
     @Override
     public void updateEntity() {
         super.updateEntity();
+        if(!cached){
+            updateAdjacentReceiver();
+            cached = true;
+        }
         if (this.tank.getFluid() != null
             && this.tank.getFluidAmount() > AtomicScience.STEAM_RATIO
             && !this.isMultiblock) {
@@ -71,20 +104,13 @@ public class TTurbine
             if (this.speed > 0.0F && !this.isDisabled()) {
                 if (super.ticks % 18L == 0L) {
                     if (this.isMultiblock) {
-                        this.worldObj.playSoundEffect(
-                            (double) this.xCoord,
-                            (double) this.yCoord,
-                            (double) this.zCoord,
-                            SoundManager.TURBINE,
-                            0.6F,
-                            (float
-                            ) (0.699999988079071D + 0.2D * ((double) this.speed / 450.0D))
-                        );
+                        this.worldObj.playSoundEffect(this.xCoord, this.yCoord, this.zCoord, SoundManager.TURBINE, 0.6F, (float
+                            ) (0.699999988079071D + 0.2D * ((double) this.speed / 450.0D)));
                     } else {
                         this.worldObj.playSoundEffect(
-                            (double) this.xCoord,
-                            (double) this.yCoord,
-                            (double) this.zCoord,
+                            this.xCoord,
+                            this.yCoord,
+                            this.zCoord,
                             SoundManager.TURBINE,
                             0.15F,
                             (float
@@ -113,7 +139,7 @@ public class TTurbine
                 }
             }
 
-            this.produce((double) (this.speed * AtomicScience.WOLUN_MULTIPLIER_OUTPUT));
+            this.pushEnergy((int) (this.speed * AtomicScience.TURBINE_MULTIPLIER_OUTPUT));
             if (this.isMultiblock) {
                 this.speed = (float
                 ) Math.max(Math.min((double) (this.speed - 4.5F), 450.0D), 0.0D);
@@ -293,4 +319,6 @@ public class TTurbine
     public FluidTankInfo[] getTankInfo(ForgeDirection arg0) {
         return new FluidTankInfo[] { new FluidTankInfo(this.tank) };
     }
+
+
 }

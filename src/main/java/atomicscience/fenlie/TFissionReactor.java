@@ -166,8 +166,7 @@ public class TFissionReactor extends TileEntityDisableable
 
     public boolean isOverToxic() {
         return AtomicScience.ALLOW_TOXIC_WASTE &&
-            // TODO >=?
-            this.wasteTank.getFluidAmount() > this.wasteTank.getCapacity();
+            this.wasteTank.getFluidAmount() >= this.wasteTank.getCapacity();
     }
 
     // TODO: WTF
@@ -251,6 +250,7 @@ public class TFissionReactor extends TileEntityDisableable
             baoZha.doExplosionA();
             baoZha.doExplosionB(true);
             this.worldObj.setBlock(this.xCoord, this.yCoord, this.zCoord, Blocks.lava);
+            this.worldObj.markBlockForUpdate(xCoord,yCoord,zCoord);
         }
     }
 

@@ -32,7 +32,7 @@ public class GCentrifuge extends GBase {
 
         this.fontRendererObj.drawString("Status: " + displayText, 70, 50, 4210752);
         this.fontRendererObj.drawString(
-            UnitDisplay.getDisplay(10000.0D, UnitDisplay.Unit.WATT), 70, 60, 4210752
+            tileEntity.DIAN + " RF/t", 70, 60, 4210752
         );
         this.fontRendererObj.drawString(
             UnitDisplay.getDisplay(

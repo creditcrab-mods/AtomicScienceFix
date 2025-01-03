@@ -8,7 +8,6 @@ import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
-import universalelectricity.api.energy.UnitDisplay;
 import universalelectricity.core.vector.Vector3;
 
 public class GAccelerator extends GuiContainer {
@@ -51,14 +50,14 @@ public class GAccelerator extends GuiContainer {
                            .getOpposite()
                    )) {
             status = "Failure";
-        } else if (this.tileEntity.wuSu != null && this.tileEntity.suDu > 0.0F) {
+        } else if (this.tileEntity.particle != null && this.tileEntity.particleVelocity > 0.0F) {
             status = "Accelerating";
         } else {
             status = "Idle";
         }
 
         this.fontRendererObj.drawString(
-            "Velocity: " + Math.round(this.tileEntity.suDu * 100.0F) + "%",
+            "Velocity: " + Math.round(this.tileEntity.particleVelocity * 100.0F) + "%",
             8,
             27,
             4210752

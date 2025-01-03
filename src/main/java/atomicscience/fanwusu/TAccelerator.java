@@ -16,9 +16,9 @@ public class TAccelerator extends TInventory implements IRotatable, ISidedInvent
     public static final int DIAN = 4000;
     public int usedEnergy = 0;
     public int antimatter;
-    public EMatter wuSu;
+    public EMatter particle;
     public static final float SU_DU = 1.0F;
-    public float suDu;
+    public float particleVelocity;
 
     public TAccelerator() {
         super(DIAN, Integer.MAX_VALUE, Integer.MAX_VALUE);
@@ -28,9 +28,9 @@ public class TAccelerator extends TInventory implements IRotatable, ISidedInvent
     public void updateEntity() {
         super.updateEntity();
         if (!this.worldObj.isRemote) {
-            this.suDu = 0.0F;
-            if (this.wuSu != null) {
-                this.suDu = (float) this.wuSu.getSuDu();
+            this.particleVelocity = 0.0F;
+            if (this.particle != null) {
+                this.particleVelocity = (float) this.particle.getVelocity();
             }
 
             if (AtomicScience.isCell(this.getStackInSlot(1))
@@ -61,7 +61,7 @@ public class TAccelerator extends TInventory implements IRotatable, ISidedInvent
                     )) {
                     int energy = energyStorage.getEnergyStored();
                     if (energy >= DIAN) {
-                        if (this.wuSu == null) {
+                        if (this.particle == null) {
                             if (this.getStackInSlot(0) != null && super.ticks % 20L == 0L) {
                                 Vector3 i$1 = new Vector3(this);
                                 i$1.modifyPositionFromSide(this.getDirection(
@@ -84,7 +84,7 @@ public class TAccelerator extends TInventory implements IRotatable, ISidedInvent
                                             .getOpposite()
                                     )) {
                                     this.usedEnergy = 0;
-                                    this.wuSu = new EMatter(
+                                    this.particle = new EMatter(
                                         this.worldObj,
                                         i$1,
                                         new Vector3(this),
@@ -96,13 +96,13 @@ public class TAccelerator extends TInventory implements IRotatable, ISidedInvent
                                         )
                                             .getOpposite()
                                     );
-                                    this.worldObj.spawnEntityInWorld(this.wuSu);
+                                    this.worldObj.spawnEntityInWorld(this.particle);
                                     this.decrStackSize(0, 1);
                                 }
                             }
-                        } else if (this.wuSu.isDead) {
-                            this.wuSu = null;
-                        } else if (this.suDu > 1.0F) {
+                        } else if (this.particle.isDead) {
+                            this.particle = null;
+                        } else if (this.particleVelocity > 1.0F) {
                             this.worldObj.playSoundEffect(
                                 (double) this.xCoord,
                                 (double) this.yCoord,
@@ -113,26 +113,26 @@ public class TAccelerator extends TInventory implements IRotatable, ISidedInvent
                             );
                             this.antimatter += 5 + this.worldObj.rand.nextInt(5);
                             this.usedEnergy = 0;
-                            this.wuSu.setDead();
-                            this.wuSu = null;
+                            this.particle.setDead();
+                            this.particle = null;
                         }
 
 
                         super.energyStorage.setEnergyStored(Integer.max(energy - DIAN , 0));
                         usedEnergy += DIAN;
                     } else {
-                        if (this.wuSu != null) {
-                            this.wuSu.setDead();
+                        if (this.particle != null) {
+                            this.particle.setDead();
                         }
 
-                        this.wuSu = null;
+                        this.particle = null;
                     }
                 } else {
-                    if (this.wuSu != null) {
-                        this.wuSu.setDead();
+                    if (this.particle != null) {
+                        this.particle.setDead();
                     }
 
-                    this.wuSu = null;
+                    this.particle = null;
                 }
             }
 
@@ -149,7 +149,7 @@ public class TAccelerator extends TInventory implements IRotatable, ISidedInvent
 
         NBTTagCompound nbt = packet.func_148857_g();
         super.disabledTicks = nbt.getInteger("disabledTicks");
-        this.suDu = nbt.getFloat("suDu");
+        this.particleVelocity = nbt.getFloat("suDu");
         this.usedEnergy = nbt.getInteger("usedEnergy");
         this.antimatter = nbt.getInteger("antimatter");
         energyStorage.readFromNBT(nbt);
@@ -173,7 +173,7 @@ public class TAccelerator extends TInventory implements IRotatable, ISidedInvent
     public Packet getDescriptionPacket() {
         NBTTagCompound nbt = new NBTTagCompound();
         nbt.setInteger("disabledTicks", super.disabledTicks);
-        nbt.setFloat("suDu", this.suDu);
+        nbt.setFloat("suDu", this.particleVelocity);
         nbt.setInteger("usedEnergy", this.usedEnergy);
         nbt.setInteger("antimatter", this.antimatter);
         energyStorage.writeToNBT(nbt);

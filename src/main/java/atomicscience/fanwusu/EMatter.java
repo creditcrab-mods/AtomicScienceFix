@@ -85,7 +85,7 @@ public class EMatter extends Entity implements IEntityAdditionalSpawnData {
                 this,
                 SoundManager.ACCELERATOR,
                 1.5F,
-                (float) (0.6000000238418579D + 0.4D * (this.getSuDu() / 1.0D))
+                (float) (0.6000000238418579D + 0.4D * (this.getVelocity() / 1.0D))
             );
         }
 
@@ -96,8 +96,8 @@ public class EMatter extends Entity implements IEntityAdditionalSpawnData {
             this.setDead();
         } else {
             TAccelerator tileEntity = (TAccelerator) t;
-            if (tileEntity.wuSu == null) {
-                tileEntity.wuSu = this;
+            if (tileEntity.particle == null) {
+                tileEntity.particle = this;
             }
 
             for (int jianKuai = -1; jianKuai < 1; ++jianKuai) {
@@ -170,7 +170,7 @@ public class EMatter extends Entity implements IEntityAdditionalSpawnData {
                 super.posZ += super.motionZ;
                 this.setPosition(super.posX, super.posY, super.posZ);
                 if (super.lastTickPosX == super.posX && super.lastTickPosY == super.posY
-                    && super.lastTickPosZ == super.posZ && this.getSuDu() <= 0.0D
+                    && super.lastTickPosZ == super.posZ && this.getVelocity() <= 0.0D
                     && this.lastTurn <= 0) {
                     this.setDead();
                 }
@@ -230,14 +230,14 @@ public class EMatter extends Entity implements IEntityAdditionalSpawnData {
             Math.floor(super.posY) + 0.5D,
             Math.floor(super.posZ) + 0.5D
         );
-        return this.getSuDu()
-            - this.getSuDu() / Math.min(Math.max(70.0D * this.getSuDu(), 4.0D), 30.0D);
+        return this.getVelocity()
+            - this.getVelocity() / Math.min(Math.max(70.0D * this.getVelocity(), 4.0D), 30.0D);
     }
 
     public void explode() {
         if (!super.worldObj.isRemote) {
             boolean radius = false;
-            if (this.getSuDu() > 0.5D) {
+            if (this.getVelocity() > 0.5D) {
                 float bounds = 1.0F;
                 AxisAlignedBB livingNearby = AxisAlignedBB.getBoundingBox(
                     super.posX - (double) bounds,
@@ -283,7 +283,7 @@ public class EMatter extends Entity implements IEntityAdditionalSpawnData {
                     super.posX,
                     super.posY,
                     super.posZ,
-                    (float) this.getSuDu() * 2.5F,
+                    (float) this.getVelocity() * 2.5F,
                     true
                 );
             }
@@ -316,7 +316,7 @@ public class EMatter extends Entity implements IEntityAdditionalSpawnData {
         this.setDead();
     }
 
-    public double getSuDu() {
+    public double getVelocity() {
         return Math.abs(super.motionX) + Math.abs(super.motionY)
             + Math.abs(super.motionZ);
     }

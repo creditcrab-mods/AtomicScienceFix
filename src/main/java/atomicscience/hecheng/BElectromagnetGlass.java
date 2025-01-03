@@ -27,6 +27,11 @@ public class BElectromagnetGlass extends BBase implements IElectromagnet {
     }
 
     @Override
+    public void onNeighborBlockChange(World worldIn, int x, int y, int z, Block neighbor) {
+
+    }
+
+    @Override
     public int getRenderBlockPass() {
         return 0;
     }

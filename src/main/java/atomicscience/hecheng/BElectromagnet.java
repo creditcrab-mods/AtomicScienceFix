@@ -4,6 +4,7 @@ import atomicscience.api.IElectromagnet;
 import atomicscience.jiqi.BBase;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.block.Block;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
@@ -30,6 +31,11 @@ public class BElectromagnet extends BBase implements IElectromagnet {
         super.registerBlockIcons(iconRegister);
         this.iconTop = iconRegister.registerIcon("atomicscience:electromagnet_top");
         this.blockIcon = iconRegister.registerIcon("atomicscience:electromagnet");
+    }
+
+    @Override
+    public void onNeighborBlockChange(World worldIn, int x, int y, int z, Block neighbor) {
+
     }
 
     @Override

@@ -1,13 +1,20 @@
 package atomicscience.fenlie;
 
 import atomicscience.jiqi.BBase;
+import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
+import net.minecraft.world.World;
 
 public class BControlRod extends BBase {
     public BControlRod() {
         super("controlRod", Material.iron);
         this.setBlockBounds(0.3F, 0.0F, 0.3F, 0.7F, 1.0F, 0.7F);
         this.textureName = "minecraft:iron_block";
+    }
+
+    @Override
+    public void onNeighborBlockChange(World worldIn, int x, int y, int z, Block neighbor) {
+
     }
 
     @Override

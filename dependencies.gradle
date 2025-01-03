@@ -37,7 +37,7 @@ dependencies {
     runtimeOnlyNonPublishable("com.github.GTNewHorizons:NotEnoughItems:2.5.4-GTNH:dev")
     runtimeOnlyNonPublishable("com.github.GTNewHorizons:waila:1.5.22:dev")
     implementation files('build/libs/universalelectricity.jar')
-    implementation files('build/libs/basiccomponents-2.0.1.jar')
+    implementation files('build/libs/basiccomponents.jar')
     runtimeOnlyNonPublishable("curse.maven:enderstorage-229306:2262092")
     runtimeOnlyNonPublishable("curse.maven:cofh-core-69162:2388750")
     runtimeOnlyNonPublishable("curse.maven:thermal-foundation-222880:2388752")

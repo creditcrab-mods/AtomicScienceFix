@@ -7,6 +7,7 @@ import atomicscience.AtomicScience;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import icbm.api.explosion.ExplosionEvent;
 import net.minecraft.util.Vec3;
+import scala.Int;
 import universalelectricity.core.vector.Vector3;
 
 public class FulminationEventHandler {
@@ -46,20 +47,26 @@ public class FulminationEventHandler {
                                 )
                         );
                         if (density < 1.0F) {
-                            double nengLiang = Math.min(
-                                event.explosive.getEnergy(),
-                                event.explosive.getEnergy()
-                                    / (explosionDistance
-                                       / (double) event.explosive.getRadius())
-                            );
-                            nengLiang = Math.max(
-                                nengLiang - (double) density * nengLiang, 0.0D
-                            );
-                            tileEntity.dian += nengLiang;
+                            int nengLiang = getNengLiang(event, explosionDistance, (double) density);
+                            tileEntity.energyStorage.receiveEnergy(nengLiang,false);
                         }
                     }
                 }
             }
         }
+    }
+
+    private static int getNengLiang(ExplosionEvent.PreExplosionEvent event, double explosionDistance, double density) {
+        int energy = (int) (event.explosive.getEnergy() / 2.5);
+        int nengLiang = Integer.min(
+            energy,
+                (int) (energy
+                                / (explosionDistance
+                                   /  event.explosive.getRadius()))
+        );
+        nengLiang = Integer.max(
+                (int) (nengLiang - density * nengLiang), 0
+        );
+        return nengLiang;
     }
 }

@@ -9,17 +9,12 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
-import net.minecraft.world.IBlockAccess;
-import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
-import universalelectricity.core.UniversalElectricity;
-import universalelectricity.core.electricity.ElectricityPack;
 import universalelectricity.core.vector.Vector3;
 import universalelectricity.prefab.implement.IRotatable;
 
 public class TAccelerator extends TInventory implements IRotatable, ISidedInventory {
     public static final int DIAN = 4000;
-    public double yongDianLiang = 0.0D;
+    public int usedEnergy = 0;
     public int antimatter;
     public EMatter wuSu;
     public static final float SU_DU = 1.0F;
@@ -65,11 +60,9 @@ public class TAccelerator extends TInventory implements IRotatable, ISidedInvent
                         this.xCoord, this.yCoord, this.zCoord
                     )) {
                     int energy = energyStorage.getEnergyStored();
-                    //this.getClass();
                     if (energy >= DIAN) {
                         if (this.wuSu == null) {
-                            if (this.getStackInSlot(0) != null
-                                && super.ticks % 20L == 0L) {
+                            if (this.getStackInSlot(0) != null && super.ticks % 20L == 0L) {
                                 Vector3 i$1 = new Vector3(this);
                                 i$1.modifyPositionFromSide(this.getDirection(
                                                                    this.worldObj,
@@ -90,7 +83,7 @@ public class TAccelerator extends TInventory implements IRotatable, ISidedInvent
                                         )
                                             .getOpposite()
                                     )) {
-                                    this.yongDianLiang = 0.0D;
+                                    this.usedEnergy = 0;
                                     this.wuSu = new EMatter(
                                         this.worldObj,
                                         i$1,
@@ -119,13 +112,14 @@ public class TAccelerator extends TInventory implements IRotatable, ISidedInvent
                                 1.0F - this.worldObj.rand.nextFloat() * 0.3F
                             );
                             this.antimatter += 5 + this.worldObj.rand.nextInt(5);
-                            this.yongDianLiang = 0.0D;
+                            this.usedEnergy = 0;
                             this.wuSu.setDead();
                             this.wuSu = null;
                         }
 
 
-                        super.energyStorage.setEnergyStored(Integer.max(energy - DIAN / 10, 0));
+                        super.energyStorage.setEnergyStored(Integer.max(energy - DIAN , 0));
+                        usedEnergy += DIAN;
                     } else {
                         if (this.wuSu != null) {
                             this.wuSu.setDead();
@@ -156,7 +150,7 @@ public class TAccelerator extends TInventory implements IRotatable, ISidedInvent
         NBTTagCompound nbt = packet.func_148857_g();
         super.disabledTicks = nbt.getInteger("disabledTicks");
         this.suDu = nbt.getFloat("suDu");
-        this.yongDianLiang = nbt.getDouble("yongDianLiang");
+        this.usedEnergy = nbt.getInteger("usedEnergy");
         this.antimatter = nbt.getInteger("antimatter");
         energyStorage.readFromNBT(nbt);
     }
@@ -180,7 +174,7 @@ public class TAccelerator extends TInventory implements IRotatable, ISidedInvent
         NBTTagCompound nbt = new NBTTagCompound();
         nbt.setInteger("disabledTicks", super.disabledTicks);
         nbt.setFloat("suDu", this.suDu);
-        nbt.setDouble("yongDianLiang", this.yongDianLiang);
+        nbt.setInteger("usedEnergy", this.usedEnergy);
         nbt.setInteger("antimatter", this.antimatter);
         energyStorage.writeToNBT(nbt);
 
@@ -199,14 +193,14 @@ public class TAccelerator extends TInventory implements IRotatable, ISidedInvent
     @Override
     public void readFromNBT(NBTTagCompound nbt) {
         super.readFromNBT(nbt);
-        this.yongDianLiang = nbt.getDouble("yongDianLiang");
+        this.usedEnergy = nbt.getInteger("usedEnergy");
         this.antimatter = nbt.getInteger("antimatter");
     }
 
     @Override
     public void writeToNBT(NBTTagCompound nbt) {
         super.writeToNBT(nbt);
-        nbt.setDouble("yongDianLiang", this.yongDianLiang);
+        nbt.setInteger("usedEnergy", this.usedEnergy);
         nbt.setInteger("antimatter", this.antimatter);
     }
 

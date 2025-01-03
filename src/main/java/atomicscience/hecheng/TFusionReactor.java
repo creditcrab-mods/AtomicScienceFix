@@ -20,29 +20,28 @@ import net.minecraftforge.fluids.IFluidHandler;
 import universalelectricity.core.block.IElectricityStorage;
 import universalelectricity.core.electricity.ElectricityPack;
 import universalelectricity.core.vector.Vector3;
+import universalelectricity.prefab.tile.TileEntityRFUser;
 
-public class TFusionReactor extends TileEntityUniversalRunnable
-    implements IFluidHandler, IElectricityStorage, ITagRender {
+public class TFusionReactor extends TileEntityRFUser
+    implements IFluidHandler, ITagRender {
     public static final int YAO_DAO = 1000;
-    public static final int YONG_DIAN = 20000;
+    public static final int RF_COST = 8000;
     public final FluidTank deuteriumTank
         = new FluidTank(AtomicScience.FLUID_DEUTERIUM, 0, 12800);
     public final FluidTank tritiumTank
         = new FluidTank(AtomicScience.FLUID_TRITIUM, 0, 12800);
     public float rotation = 0.0F;
 
-    @Override
-    public ElectricityPack getRequest() {
-        return this.hasFuel()
-            ? new ElectricityPack(20000.0D / this.getVoltage(), this.getVoltage())
-            : new ElectricityPack();
+    public TFusionReactor() {
+        super(8000, Integer.MAX_VALUE, 8000);
     }
+
 
     @Override
     public void updateEntity() {
         super.updateEntity();
         if (!this.worldObj.isRemote) {
-            if (!this.isDisabled() && super.wattsReceived >= 20000.0D && this.hasFuel()
+            if (!this.isDisabled() && super.energyStorage.getEnergyStored() >= RF_COST && this.hasFuel()
                 && super.ticks % 20L == 0L) {
                 for (int i = 2; i < 6; ++i) {
                     Vector3 diDian = new Vector3(this);
@@ -61,7 +60,7 @@ public class TFusionReactor extends TileEntityUniversalRunnable
                     }
                 }
 
-                this.setJoules(Math.max(super.wattsReceived - 20000.0D, 0.0D));
+                this.energyStorage.extractEnergy(RF_COST,false);
                 if (this.worldObj.rand.nextInt(10) == 0) {
                     deuteriumTank.drain(200, true);
                     if (AtomicScience.REQUIRE_TRITIUM) {
@@ -79,7 +78,7 @@ public class TFusionReactor extends TileEntityUniversalRunnable
     @Override
     public Packet getDescriptionPacket() {
         NBTTagCompound nbt = new NBTTagCompound();
-        nbt.setDouble("wattsReceived", super.wattsReceived);
+        energyStorage.writeToNBT(nbt);
         nbt.setInteger("deuterium", this.deuteriumTank.getFluidAmount());
         nbt.setInteger("tritium", this.tritiumTank.getFluidAmount());
 
@@ -91,7 +90,7 @@ public class TFusionReactor extends TileEntityUniversalRunnable
     @Override
     public void onDataPacket(NetworkManager arg0, S35PacketUpdateTileEntity arg1) {
         NBTTagCompound nbt = arg1.func_148857_g();
-        super.wattsReceived = nbt.getDouble("wattsReceived");
+        energyStorage.readFromNBT(nbt);
         this.deuteriumTank.setFluid(
             new FluidStack(AtomicScience.FLUID_DEUTERIUM, nbt.getInteger("deuterium"))
         );
@@ -103,7 +102,6 @@ public class TFusionReactor extends TileEntityUniversalRunnable
     @Override
     public void readFromNBT(NBTTagCompound nbt) {
         super.readFromNBT(nbt);
-        super.wattsReceived = nbt.getDouble("wattsReceived");
         this.deuteriumTank.setFluid(
             new FluidStack(AtomicScience.FLUID_DEUTERIUM, nbt.getInteger("deuterium"))
         );
@@ -115,25 +113,10 @@ public class TFusionReactor extends TileEntityUniversalRunnable
     @Override
     public void writeToNBT(NBTTagCompound nbt) {
         super.writeToNBT(nbt);
-        nbt.setDouble("wattsReceived", super.wattsReceived);
         nbt.setInteger("deuterium", this.deuteriumTank.getFluidAmount());
         nbt.setInteger("tritium", this.tritiumTank.getFluidAmount());
     }
 
-    @Override
-    public double getJoules() {
-        return super.wattsReceived;
-    }
-
-    @Override
-    public void setJoules(double joules) {
-        super.wattsReceived = Math.max(Math.min(joules, this.getMaxJoules()), 0.0D);
-    }
-
-    @Override
-    public double getMaxJoules() {
-        return 20000.0D;
-    }
 
     @Override
     public float addInformation(HashMap map, EntityPlayer player) {

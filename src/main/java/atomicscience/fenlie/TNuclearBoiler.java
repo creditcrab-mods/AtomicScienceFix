@@ -21,6 +21,7 @@ import net.minecraftforge.fluids.IFluidHandler;
 import universalelectricity.api.energy.IEnergyContainer;
 import universalelectricity.core.electricity.ElectricityPack;
 import universalelectricity.core.item.ElectricItemHelper;
+import universalelectricity.core.item.RFItemHelper;
 import universalelectricity.prefab.implement.IRotatable;
 
 public class TNuclearBoiler
@@ -73,11 +74,8 @@ public class TNuclearBoiler
             }
 
             if (this.canWork()) {
-                /*
-                super.wattsReceived += ElectricItemHelper.dechargeItem(
-                    super.containingItems[0], 800.0D, this.getVoltage()
-                );
-                */
+                var toExtract = energyStorage.receiveEnergy(DIAN,true);
+                energyStorage.receiveEnergy(RFItemHelper.extractEnergyFromContainer(containingItems[0],toExtract,false),false);
                 int energy = super.energyStorage.getEnergyStored();
                 this.getClass();
                 if (energy >=  (DIAN)) {

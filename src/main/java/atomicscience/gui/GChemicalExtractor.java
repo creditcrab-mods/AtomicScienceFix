@@ -22,7 +22,7 @@ public class GChemicalExtractor extends GBase {
             this.tileEntity.getInventoryName(), 45, 6, 4210752
         );
         this.fontRendererObj.drawString(
-            this.tileEntity.DIAN * 20 + "RF/t",
+            this.tileEntity.DIAN + "RF/t",
             90,
             48,
             4210752

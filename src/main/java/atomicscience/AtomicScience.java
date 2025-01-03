@@ -96,6 +96,7 @@ import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.oredict.OreDictionary;
 import org.apache.commons.lang3.ArrayUtils;
+import universalelectricity.api.item.ItemRF;
 import universalelectricity.core.item.ItemElectric;
 import universalelectricity.core.vector.Vector3;
 import universalelectricity.prefab.TranslationHelper;
@@ -166,7 +167,7 @@ public class AtomicScience {
     public static Block bUraniumOre;
     public static Item itYellowcake;
     public static Item itUranium;
-    public static ItemElectric itThermometer;
+    public static ItemRF itThermometer;
     public static Item itHazmatHelmet;
     public static Item itHazmatChestplate;
     public static Item itHazmanLeggings;

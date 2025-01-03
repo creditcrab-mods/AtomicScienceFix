@@ -1,6 +1,8 @@
 package atomicscience.jiqi;
 
 import atomicscience.AtomicScience;
+import cofh.api.energy.IEnergyContainerItem;
+import cofh.api.energy.IEnergyStorage;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -19,6 +21,7 @@ import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
 import universalelectricity.core.electricity.ElectricityPack;
 import universalelectricity.core.item.ElectricItemHelper;
+import universalelectricity.core.item.RFItemHelper;
 import universalelectricity.prefab.implement.IRotatable;
 
 public class TChemicalExtractor
@@ -64,15 +67,11 @@ public class TChemicalExtractor
             }
 
             if (this.canWork()) {
-                /*TODO:Drain rf item
-                super.wattsReceived += ElectricItemHelper.dechargeItem(
-                    super.containingItems[0], 500.0D, this.getVoltage()
-                );
-
-                 */
+                var toExtract = energyStorage.receiveEnergy(DIAN,true);
+                energyStorage.receiveEnergy(RFItemHelper.extractEnergyFromContainer(containingItems[0],toExtract,false),false);
                 int energy = energyStorage.getEnergyStored();
                 //this.getClass();
-                if (energy >= (DIAN / 2)) {
+                if (energy >= (DIAN)) {
                     if (this.smeltingTicks == 0) {
                         this.smeltingTicks = 280;
                     }
@@ -215,6 +214,9 @@ public class TChemicalExtractor
 
     @Override
     public boolean isItemValidForSlot(int slotID, ItemStack itemStack) {
+        if(slotID == 0 && this.getStackInSlot(0) == null){
+            return itemStack.getItem() instanceof IEnergyContainerItem;
+        }
         if (slotID == 2) {
             if (this.getStackInSlot(2) == null)
                 return true;

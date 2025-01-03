@@ -21,6 +21,7 @@ import net.minecraftforge.oredict.OreDictionary;
 import universalelectricity.core.electricity.ElectricityPack;
 import universalelectricity.core.item.ElectricItemHelper;
 import universalelectricity.core.item.IItemElectric;
+import universalelectricity.core.item.RFItemHelper;
 import universalelectricity.core.vector.Vector3;
 import universalelectricity.core.vector.VectorHelper;
 import universalelectricity.prefab.implement.IRotatable;
@@ -68,12 +69,8 @@ public class TCentrifuge
             }
 
             if (this.canWork()) {
-                //TODO: Drain RF Item
-                /*
-                super.wattsReceived += ElectricItemHelper.dechargeItem(
-                    super.containingItems[0], 500.0D, this.getVoltage()
-                );
-                */
+                var toExtract = energyStorage.receiveEnergy(DIAN,true);
+                energyStorage.receiveEnergy(RFItemHelper.extractEnergyFromContainer(containingItems[0],toExtract,false),false);
 
                 if (energyStorage.getEnergyStored() >= DIAN) {
                     if (this.smeltingTicks == 0) {

@@ -12,7 +12,7 @@ import universalelectricity.core.electricity.ElectricityPack;
 
 public class TAtomicAssembler extends TInventory {
     public final int SMELTING_TICKS = 1200;
-    public final int DIAN = 4000;
+    public static final int DIAN = 4000;
     public int smeltingTicks = 0;
     public float rotationYaw1;
     public float rotationYaw2;
@@ -20,7 +20,7 @@ public class TAtomicAssembler extends TInventory {
     public EntityItem entityItem;
 
     public TAtomicAssembler() {
-        super(32000, Integer.MAX_VALUE, Integer.MAX_VALUE);
+        super(DIAN, Integer.MAX_VALUE, Integer.MAX_VALUE);
     }
 
     @Override

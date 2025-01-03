@@ -1,5 +1,6 @@
 package atomicscience.gui;
 
+import atomicscience.RFDisplay;
 import atomicscience.TAtomicAssembler;
 import atomicscience.jiqi.CAssembler;
 import net.minecraft.client.gui.inventory.GuiContainer;
@@ -46,7 +47,7 @@ public class GAtomicAssembler extends GuiContainer {
 
         this.fontRendererObj.drawString(displayText, 100, this.ySize - 108 + 2, 4210752);
         this.fontRendererObj.drawString(
-            "Voltage: " + (int) 0,
+            RFDisplay.displayRF(tileEntity.DIAN) + "/Wk",
             100,
             this.ySize - 96 + 2,
             4210752

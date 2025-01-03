@@ -2,6 +2,7 @@ package atomicscience.hecheng;
 
 import atomicscience.AtomicScience;
 import atomicscience.jiqi.TChemicalExtractor;
+import cofh.api.energy.IEnergyContainerItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
@@ -10,7 +11,6 @@ import net.minecraft.inventory.SlotFurnace;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidRegistry;
-import universalelectricity.core.item.IItemElectric;
 import universalelectricity.prefab.SlotSpecific;
 
 public class CChemicalExtractor extends Container {
@@ -22,7 +22,7 @@ public class CChemicalExtractor extends Container {
     ) {
         this.tileEntity = tileEntity;
         this.addSlotToContainer(
-            new SlotSpecific(tileEntity, 0, 65, 49, IItemElectric.class)
+            new SlotSpecific(tileEntity, 0, 65, 49, IEnergyContainerItem.class)
         );
         this.addSlotToContainer(new Slot(tileEntity, 1, 25, 50));
         this.addSlotToContainer(
@@ -71,7 +71,7 @@ public class CChemicalExtractor extends Container {
             ItemStack itemStack = var3.getStack();
             var2 = itemStack.copy();
             if (par1 >= 4) {
-                if (itemStack.getItem() instanceof IItemElectric) {
+                if (itemStack.getItem() instanceof IEnergyContainerItem) {
                     if (!this.mergeItemStack(itemStack, 0, 1, false)) {
                         return null;
                     }

@@ -25,7 +25,7 @@ public class RFusionReactor extends RenderTaggedTile {
         GL11.glRotatef(180.0F, 0.0F, 0.0F, 1.0F);
         MODEL.render((float) Math.toRadians((double) tileEntity.rotation), 0.0625F);
         tileEntity.rotation
-            = (float) ((double) tileEntity.rotation + tileEntity.wattsReceived / 500.0D);
+            =  tileEntity.rotation + (float) tileEntity.energyStorage.getEnergyStored() / (float) tileEntity.RF_COST;
         if (tileEntity.rotation > 360.0F) {
             tileEntity.rotation = 0.0F;
         }

@@ -10,6 +10,7 @@ import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
 import universalelectricity.core.item.ElectricItemHelper;
+import universalelectricity.core.item.RFItemHelper;
 
 public class Recipes {
     /**
@@ -157,7 +158,7 @@ public class Recipes {
             .register();
 
         new RecipeBuilder(new ShapedOreRecipeAdapter())
-            .output(ElectricItemHelper.getUncharged(AtomicScience.itThermometer))
+            .output(RFItemHelper.setDefaultEnergyTag(new ItemStack(AtomicScience.itThermometer),0))
             .pattern("SSS", "GCG", "GSG")
             .ingredient('S', "ingotSteel")
             .ingredient('G', Blocks.glass)
@@ -168,7 +169,7 @@ public class Recipes {
             .output(AtomicScience.bThermometer)
             .pattern("SSS", "SWS", "SSS")
             .ingredient('S', "ingotSteel")
-            .ingredient('W', ElectricItemHelper.getUncharged(AtomicScience.itThermometer))
+            .ingredient('W', RFItemHelper.setDefaultEnergyTag(new ItemStack(AtomicScience.itThermometer),0))
             .register();
 
         new RecipeBuilder(new ShapedOreRecipeAdapter())

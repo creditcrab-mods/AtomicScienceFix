@@ -2,6 +2,7 @@ package atomicscience.hecheng;
 
 import atomicscience.AtomicScience;
 import atomicscience.fenlie.TNuclearBoiler;
+import cofh.api.energy.IEnergyContainerItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
@@ -21,7 +22,7 @@ public class CNuclearBoiler extends Container {
     ) {
         this.tileEntity = tileEntity;
         this.addSlotToContainer(
-            new SlotSpecific(tileEntity, 0, 56, 26, IItemElectric.class)
+            new SlotSpecific(tileEntity, 0, 56, 26, IEnergyContainerItem.class)
         );
         this.addSlotToContainer(new Slot(tileEntity, 1, 25, 50));
         this.addSlotToContainer(new Slot(tileEntity, 2, 136, 50));
@@ -75,7 +76,7 @@ public class CNuclearBoiler extends Container {
             ItemStack itemStack = slot.getStack();
             var2 = itemStack.copy();
             if (slotID >= 4) {
-                if (itemStack.getItem() instanceof IItemElectric) {
+                if (itemStack.getItem() instanceof IEnergyContainerItem) {
                     if (!this.mergeItemStack(itemStack, 0, 1, false)) {
                         return null;
                     }

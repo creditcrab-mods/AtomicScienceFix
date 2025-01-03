@@ -1,25 +1,59 @@
 package atomicscience.fanwusu;
 
-import atomicscience.fanwusu.FulminationEventHandler;
-import calclavia.lib.TileEntityUniversalProducer;
-import universalelectricity.core.UniversalElectricity;
+import cofh.api.energy.IEnergyReceiver;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraftforge.common.util.ForgeDirection;
+import universalelectricity.core.vector.Vector3;
+import universalelectricity.core.vector.VectorHelper;
+import universalelectricity.prefab.tile.TileEntityRFProducer;
 
-public class TFulminationGenerator extends TileEntityUniversalProducer {
-    public final int DIAN = 5000;
+public class TFulminationGenerator extends TileEntityRFProducer {
+    public static final int DIAN = 2000;
     public double dian;
+    public boolean cached = false;
+
+    public IEnergyReceiver[] receivers = {null,null,null,null,null,null};
+
+    public void updateAdjacentReceiver(){
+        for (int i = 0; i < 6; ++i) {
+            TileEntity te = VectorHelper.getTileEntityFromSide(this.worldObj, new Vector3(this.xCoord,this.yCoord,this.zCoord), ForgeDirection.getOrientation(i));
+            if (te instanceof IEnergyReceiver) receivers[i] = (IEnergyReceiver) te;
+        }
+    }
+
+    @Override public void onNeighborChange(){
+        updateAdjacentReceiver();
+    }
+
+    public void pushEnergy(int energy){
+        energy = energyStorage.extractEnergy(energy,true);
+        int toExtract = 0;
+        for (var receiver : receivers){
+            if(receiver != null){
+                int extracted = receiver.receiveEnergy(ForgeDirection.DOWN,energy,false);
+                toExtract += extracted;
+                energy = Integer.max(0,energy - extracted);
+            }
+        }
+        energyStorage.extractEnergy(toExtract,false);
+
+    }
 
     public TFulminationGenerator() {
+        super(Integer.MAX_VALUE,DIAN,Integer.MAX_VALUE);
         FulminationEventHandler.INSTANCE.register(this);
     }
 
     @Override
     public void updateEntity() {
         super.updateEntity();
-        if (!this.isDisabled()) {
-            this.produce(Math.min(this.dian, 5000.0D));
+        if(!cached){
+            updateAdjacentReceiver();
+            cached = true;
         }
-
-        this.dian = Math.max(this.dian - 5000.0D, 0.0D);
+        if (!this.isDisabled()) {
+            this.pushEnergy(DIAN);
+        }
     }
 
     public void invalidate() {
@@ -27,7 +61,4 @@ public class TFulminationGenerator extends TileEntityUniversalProducer {
         super.initiate();
     }
 
-    public double getVoltage() {
-        return UniversalElectricity.isVoltageSensitive ? 480.0D : 120.0D;
-    }
 }

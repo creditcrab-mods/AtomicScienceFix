@@ -1,13 +1,13 @@
 package atomicscience.fenlie;
 
 import atomicscience.AtomicScience;
+import cofh.api.energy.IEnergyContainerItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.inventory.SlotFurnace;
 import net.minecraft.item.ItemStack;
-import universalelectricity.core.item.IItemElectric;
 import universalelectricity.prefab.SlotSpecific;
 
 public class CCentrifuge extends Container {
@@ -16,7 +16,7 @@ public class CCentrifuge extends Container {
     public CCentrifuge(InventoryPlayer par1InventoryPlayer, TCentrifuge tileEntity) {
         this.tileEntity = tileEntity;
         this.addSlotToContainer(
-            new SlotSpecific(tileEntity, 0, 131, 26, IItemElectric.class)
+            new SlotSpecific(tileEntity, 0, 131, 26, IEnergyContainerItem.class)
         );
         this.addSlotToContainer(new Slot(tileEntity, 1, 25, 50));
         this.addSlotToContainer(

@@ -1,5 +1,6 @@
 package atomicscience.gui;
 
+import atomicscience.RFDisplay;
 import atomicscience.fanwusu.CAccelerator;
 import atomicscience.fanwusu.EMatter;
 import atomicscience.fanwusu.TAccelerator;
@@ -65,9 +66,7 @@ public class GAccelerator extends GuiContainer {
         this.fontRendererObj.drawString("Status: " + status, 8, 38, 4210752);
         this.fontRendererObj.drawString(
             "Used: "
-                + UnitDisplay.getDisplayShort(
-                    this.tileEntity.yongDianLiang, UnitDisplay.Unit.JOULES
-                ),
+                + RFDisplay.displayRF(tileEntity.usedEnergy),
             8,
             49,
             4210752
@@ -76,13 +75,8 @@ public class GAccelerator extends GuiContainer {
 
         this.fontRendererObj.drawString(
             var10001
-                .append(UnitDisplay.getDisplayShort(
-                     10000 * 20, UnitDisplay.Unit.WATT
-                ))
-                .append(" ")
-                .append(UnitDisplay.getDisplayShort(
-                    0, UnitDisplay.Unit.VOLTAGE
-                ))
+                .append(RFDisplay.displayRF(tileEntity.DIAN))
+                .append("/t")
                 .toString(),
             8,
             60,
